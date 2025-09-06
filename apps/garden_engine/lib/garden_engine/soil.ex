@@ -1,5 +1,5 @@
 defmodule GardenEngine.Soil do
-  @min_level 7
+  @min_level -7
   @max_level 7
   @fix_change 2
 
