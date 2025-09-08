@@ -43,6 +43,10 @@ defmodule GardenEngine.SoilTest do
     test "feeds low potassium use", %{soil: soil} do
       assert Soil.feed_potassium(soil, :low).potassium_level == -1
     end
+
+    test "raises error when invalid nutrient level is provided", %{soil: soil} do
+      assert_raise FunctionClauseError, fn -> Soil.feed_phosphorus(soil, :invalid) end
+    end
   end
 
   describe "fixing nutrients" do
