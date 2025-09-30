@@ -12,6 +12,7 @@ defmodule GardenEngine.SoilSegment do
   Each nutrient level is represented as a non-negative integer from 0 to 100.
   """
 
+  @enforce_keys [:n_level, :p_level, :k_level]
   defstruct [:n_level, :p_level, :k_level]
 
   @type t :: %__MODULE__{
