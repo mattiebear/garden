@@ -1,21 +1,18 @@
 # GardenEngine
 
-**TODO: Add description**
+## Technical Implementation Brainstorm
+- A garden has many plot
+- A plot has many soil segments tracked by their coordinates
+- A plot can be targeted with an area
+- A planting has an area on a plot
+- A planting has a plant
+- Each soil segment has nutrient values (phosphorus, potassium, nitrogen)
+- Each plant has requirements for needs and fixes
+- Each plant has time to mature and time to harvest past maturity
+- A planting tracks the number of days that have passed since planting
+- Any section (area) of the garden can advance in time, which grows the plant and depletes or replenishes nutrients
+- Go with standard +y = down for coordination
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `garden_engine` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:garden_engine, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/garden_engine>.
-
+## Questions to Answer
+- How will a plot store information on the coordinates?
+- Is the naming convention for plots and coordinates consistent?
