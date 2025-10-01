@@ -1,3 +1,20 @@
+defmodule GardenEngine.EmptyArea do
+  @moduledoc """
+  An area with 0 size
+  """
+
+  defstruct []
+
+  @type t :: %__MODULE__{}
+
+  @doc """
+  Returns an empty area struct
+  """
+
+  @spec new() :: t()
+  def new(), do: %__MODULE__{}
+end
+
 defmodule GardenEngine.Area do
   @moduledoc """
   A geometric rectangular area with width, depth, and starting coordinates.
@@ -53,7 +70,7 @@ defmodule GardenEngine.Area do
     if left < right and top < bottom do
       new(right - left, bottom - top, left, top)
     else
-      EmptyArea.new()
+      %EmptyArea{}
     end
   end
 
@@ -65,21 +82,19 @@ defmodule GardenEngine.Area do
   def coordinates(%__MODULE__{x: x, y: y, width: w, depth: d}) do
     for i <- x..(x + w - 1), j <- y..(y + d - 1), do: {i, j}
   end
-end
-
-defmodule GardenEngine.EmptyArea do
-  @moduledoc """
-  An area with 0 size
-  """
-
-  defstruct []
-
-  @type t :: %__MODULE__{}
 
   @doc """
-  Returns an empty area struct
+  Whether or not two areas overlap.
   """
 
-  @spec new() :: t()
-  def new(), do: %__MODULE__{}
+  @spec overlaps?(area1 :: t(), area2 :: t()) :: boolean()
+  def overlaps?(
+        %__MODULE__{} = area1,
+        %__MODULE__{} = area2
+      ) do
+    case intersect(area1, area2) do
+      %EmptyArea{} -> false
+      _ -> true
+    end
+  end
 end

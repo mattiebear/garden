@@ -53,4 +53,20 @@ defmodule GardenEngine.AreaTest do
                Area.coordinates(area)
     end
   end
+
+  describe "overlaps?/2" do
+    test "is true when two areas overlap" do
+      area1 = Area.new(4, 4, 0, 0)
+      area2 = Area.new(4, 4, 2, 2)
+
+      assert Area.overlaps?(area1, area2)
+    end
+
+    test "is false when two areas do not overlap" do
+      area1 = Area.new(4, 4, 0, 0)
+      area2 = Area.new(4, 4, 6, 6)
+
+      refute Area.overlaps?(area1, area2)
+    end
+  end
 end
