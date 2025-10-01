@@ -1,4 +1,6 @@
 defmodule GardenEngine.Plot do
+  alias GardenEngine.{Area, SoilSegment}
+
   @moduledoc """
   A single garden plot.
 
@@ -9,7 +11,7 @@ defmodule GardenEngine.Plot do
   """
 
   @enforce_keys [:area]
-  defstruct area: nil, segements: %{}
+  defstruct area: nil, segments: %{}
 
   @doc """
   Creates a new plot with the provided dimensions.
@@ -17,5 +19,13 @@ defmodule GardenEngine.Plot do
 
   def new(width, depth) do
     area = Area.new(width, depth)
+    segments = initialize_segments(area)
+    %__MODULE__{area: area, segments: segments}
+  end
+
+  defp initialize_segments(area) do
+    area
+    |> Area.coordinates()
+    |> Enum.into(%{}, fn coord -> {coord, SoilSegment.new()} end)
   end
 end
