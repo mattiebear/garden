@@ -32,6 +32,7 @@ defmodule GardenEngine.Area do
   defstruct [:width, :depth, :x, :y]
 
   @type t :: %__MODULE__{width: pos_integer(), depth: pos_integer(), x: integer(), y: integer()}
+  @type coord :: {x :: integer(), y :: integer()}
 
   @doc """
   Creates a new area at position `{0,0}` with the provided dimensions
@@ -78,7 +79,7 @@ defmodule GardenEngine.Area do
   Returns a list of coordinates in form `{x, y}` tuples.
   """
 
-  @spec coordinates(area :: t()) :: [{x :: integer(), y :: integer()}]
+  @spec coordinates(area :: t()) :: [coord()]
   def coordinates(%__MODULE__{x: x, y: y, width: w, depth: d}) do
     for i <- x..(x + w - 1), j <- y..(y + d - 1), do: {i, j}
   end

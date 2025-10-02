@@ -8,10 +8,16 @@ defmodule GardenEngine.Plot do
   age and also deplete the soil of the individual soil segments.
   """
 
-  alias GardenEngine.{Area, SoilSegment}
+  alias GardenEngine.{Area, SoilSegment, Planting}
 
   @enforce_keys [:area]
-  defstruct area: nil, segments: %{}
+  defstruct area: nil, segments: %{}, plantings: %{}
+
+  @type t :: %__MODULE__{
+          area: Area.t(),
+          segments: %{Area.coord() => SoilSegment.t()},
+          plantings: %{String.t() => Planting.t()}
+        }
 
   @doc """
   Creates a new plot with the provided dimensions.
@@ -36,7 +42,14 @@ defmodule GardenEngine.Plot do
   within the area. At this time plant areas cannot overlap.
   """
 
-  def add_planting(plant, area, options \\ []) do
-    # Implementation goes here
-  end
+  # @spec add_planting(Plot.t(), GardenEngine.Plant.id(), GardenEngine.Plant.t(), GardenEngine.Area.t()) :: {:ok, GardenEngine.Plot.t()} | {:error, GardenEngine.Error.t()}
+  # def add_planting(plot, id, plant, area) do
+  #   with {:ok, _area} <- valid_area?(plot, area),
+  #        {:ok, _planting} <- Planting.new(plot, plant, area)
+  #   do
+  #     {:ok, plot}
+  #     else
+  #       {:error, reason} -> {:error, reason}
+  #   end
+  # end
 end
