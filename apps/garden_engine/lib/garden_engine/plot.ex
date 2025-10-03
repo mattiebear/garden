@@ -8,7 +8,7 @@ defmodule GardenEngine.Plot do
   age and also deplete the soil of the individual soil segments.
   """
 
-  alias GardenEngine.{Area, SoilSegment, Planting}
+  alias GardenEngine.{Area, Plant, Planting, SoilSegment}
 
   @enforce_keys [:area]
   defstruct area: nil, segments: %{}, plantings: %{}
@@ -42,14 +42,34 @@ defmodule GardenEngine.Plot do
   within the area. At this time plant areas cannot overlap.
   """
 
-  # @spec add_planting(Plot.t(), GardenEngine.Plant.id(), GardenEngine.Plant.t(), GardenEngine.Area.t()) :: {:ok, GardenEngine.Plot.t()} | {:error, GardenEngine.Error.t()}
-  # def add_planting(plot, id, plant, area) do
-  #   with {:ok, _area} <- valid_area?(plot, area),
-  #        {:ok, _planting} <- Planting.new(plot, plant, area)
-  #   do
-  #     {:ok, plot}
-  #     else
-  #       {:error, reason} -> {:error, reason}
-  #   end
-  # end
+  @spec add_planting(
+          plot :: t(),
+          id :: String.t(),
+          plant :: GardenEngine.Plant.t(),
+          area :: GardenEngine.Area.t()
+        ) :: {:ok, GardenEngine.Plot.t()} | {:error, String.t()}
+  def add_planting(%__MODULE__{} = plot, id, %Plant{} = plant, %Area{} = area)
+      when is_binary(id) do
+    cond do
+      plot_exists?(plot, id) ->
+        {:error, "Planting already exists with provided ID"}
+
+      area_occupied?(plot, area) ->
+        {:error, "Area already occupied"}
+
+      true ->
+        planting = Planting.new(plant, area)
+        {:ok, %{plot | plantings: Map.put(plot.plantings, id, planting)}}
+    end
+  end
+
+  defp area_occupied?(plot, area) do
+    plot.plantings
+    |> Map.values()
+    |> Enum.any?(fn planting -> Area.overlaps?(planting.area, area) end)
+  end
+
+  defp plot_exists?(plot, id) do
+    Map.has_key?(plot.plantings, id)
+  end
 end
