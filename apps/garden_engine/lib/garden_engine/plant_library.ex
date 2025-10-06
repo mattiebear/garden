@@ -20,8 +20,11 @@ defmodule GardenEngine.PlantLibrary do
   Gets a specific plant by its name.
   """
 
-  @spec get_plant(String.t()) :: Plant.t() | nil
+  @spec get_plant(String.t()) :: {:ok, Plant.t()} | {:error, String.t()}
   def get_plant(name) do
-    Map.get(@plants, name)
+    case Map.get(@plants, name) do
+      nil -> {:error, "Plant not found"}
+      plant -> {:ok, plant}
+    end
   end
 end
