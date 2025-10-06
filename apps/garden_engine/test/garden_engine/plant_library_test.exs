@@ -11,7 +11,9 @@ defmodule GardenEngine.PlantLibraryTest do
                   name: "tomato",
                   n_impact: -3,
                   p_impact: -2,
-                  k_impact: -2
+                  k_impact: -2,
+                  days_to_maturity: 75,
+                  days_productive: 60
                 }}
     end
 

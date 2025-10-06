@@ -10,16 +10,27 @@ defmodule GardenEngine.PlantingTest do
       planting = Planting.new(plant, area)
       assert planting.plant == plant
       assert planting.area == area
-      assert planting.age == 0
+      assert planting.planted_on == Date.utc_today()
     end
   end
 
   describe "new/3" do
     test "creates a new planting with the provided options", %{plant: plant, area: area} do
-      planting = Planting.new(plant, area, age: 10)
+      date = ~D[2025-10-05]
+      planting = Planting.new(plant, area, planted_on: date)
       assert planting.plant == plant
       assert planting.area == area
-      assert planting.age == 10
+      assert planting.planted_on == date
+    end
+  end
+
+  describe "age/2" do
+    test "returns the age of the planting", %{plant: plant, area: area} do
+      date = ~D[2025-10-05]
+      planting = Planting.new(plant, area, planted_on: date)
+      assert Planting.age(planting, date) == 0
+      assert Planting.age(planting, ~D[2025-10-06]) == 1
+      assert Planting.age(planting, ~D[2025-12-05]) == 61
     end
   end
 

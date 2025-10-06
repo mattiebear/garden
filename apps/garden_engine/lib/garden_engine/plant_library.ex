@@ -12,8 +12,14 @@ defmodule GardenEngine.PlantLibrary do
   alias GardenEngine.Plant
 
   @plants %{
-    "tomato" => Plant.new("tomato", n_impact: -3, p_impact: -2, k_impact: -2),
-    "beans" => Plant.new("beans", n_impact: +2, p_impact: -1, k_impact: -1)
+    "tomato" =>
+      Plant.new("tomato",
+        n_impact: -3,
+        p_impact: -2,
+        k_impact: -2,
+        days_to_maturity: 75,
+        days_productive: 60
+      )
   }
 
   @doc """
