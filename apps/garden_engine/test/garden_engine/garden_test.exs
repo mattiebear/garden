@@ -3,9 +3,15 @@ defmodule GardenEngine.GardenTest do
 
   alias GardenEngine.{Area, Garden, Plant, Plot}
 
-  describe "new/0" do
+  describe "new/1" do
     test "creates a new garden" do
       assert %Garden{} = Garden.new()
+    end
+
+    test "creates a new garden with current date" do
+      current_date = ~D[2025-06-07]
+      assert %Garden{current_date: date} = Garden.new(current_date: current_date)
+      assert date == current_date
     end
   end
 

@@ -26,9 +26,9 @@ defmodule GardenEngine.PlantingTest do
 
   describe "age/2" do
     test "returns the age of the planting", %{plant: plant, area: area} do
-      date = ~D[2025-10-05]
-      planting = Planting.new(plant, area, planted_on: date)
-      assert Planting.age(planting, date) == 0
+      current_date = ~D[2025-10-05]
+      planting = Planting.new(plant, area, planted_on: current_date)
+      assert Planting.age(planting, current_date) == 0
       assert Planting.age(planting, ~D[2025-10-06]) == 1
       assert Planting.age(planting, ~D[2025-12-05]) == 61
     end

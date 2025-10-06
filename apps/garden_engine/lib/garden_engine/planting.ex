@@ -29,8 +29,8 @@ defmodule GardenEngine.Planting do
   @doc """
   Returns the current age of the planting in days
   """
-  @spec age(t(), current_day :: Date.t()) :: integer()
-  def age(%__MODULE__{planted_on: planted_on}, %Date{} = current_day) do
-    Date.diff(current_day, planted_on)
+  @spec age(t(), current_date :: Date.t()) :: integer()
+  def age(%__MODULE__{planted_on: planted_on}, %Date{} = current_date) do
+    Date.diff(current_date, planted_on)
   end
 end

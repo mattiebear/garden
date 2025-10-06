@@ -9,7 +9,7 @@ defmodule GardenEngine.Garden do
 
   alias GardenEngine.{Area, Plant, Plot}
 
-  defstruct plots: %{}
+  defstruct [:current_date, plots: %{}]
 
   @type t :: %__MODULE__{plots: %{String.t() => Plot.t()}}
 
@@ -17,9 +17,10 @@ defmodule GardenEngine.Garden do
   Creates a new garden
   """
 
-  @spec new() :: t()
-  def new() do
-    %__MODULE__{}
+  @spec new(options :: keyword()) :: t()
+  def new(options \\ []) do
+    current_date = Keyword.get(options, :current_date, Date.utc_today())
+    %__MODULE__{current_date: current_date}
   end
 
   @doc """
