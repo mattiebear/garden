@@ -59,6 +59,16 @@ defmodule GardenEngine.GardenTest do
     end
   end
 
+  describe "advance/2" do
+    test "does not advance to a date in the past" do
+      date = ~D[2023-01-01]
+      garden = Garden.new(current_date: date)
+
+      assert {:error, "Can't advance to a date in the past"} =
+               Garden.advance(garden, ~D[2022-12-31])
+    end
+  end
+
   defp garden(context) do
     Map.put(context, :garden, Garden.new())
   end

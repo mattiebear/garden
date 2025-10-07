@@ -12,7 +12,7 @@ defmodule GardenEngine.Planting do
   alias GardenEngine.{Area, Plant}
 
   @enforce_keys [:area, :plant, :planted_on]
-  defstruct [:area, :plant, :planted_on, status: :growing, nutrients_applied?: false]
+  defstruct [:area, :plant, :planted_on, status: :growing, nutrients_adjusted?: false]
 
   @typedoc """
   The stage of the planting's growth cycle. Once it reaches maturity the planting
@@ -25,7 +25,7 @@ defmodule GardenEngine.Planting do
           area: Area.t(),
           plant: Plant.t(),
           planted_on: Date.t(),
-          nutrients_applied?: boolean()
+          nutrients_adjusted?: boolean()
         }
 
   @doc """
@@ -40,7 +40,7 @@ defmodule GardenEngine.Planting do
       area: area,
       plant: plant,
       planted_on: planted_on,
-      nutrients_applied?: false
+      nutrients_adjusted?: false
     }
   end
 
@@ -66,5 +66,14 @@ defmodule GardenEngine.Planting do
       age < plant.days_to_maturity + plant.days_productive -> :producing
       true -> :finished
     end
+  end
+
+  @doc """
+  Informs if a nutrient adjustment should be performed for the planting area
+  """
+
+  @spec nutrient_adjustment_required?(t(), current_date :: Date.t()) :: boolean()
+  def nutrient_adjustment_required?(%__MODULE__{} = planting, %Date{} = current_date) do
+    current_stage(planting, current_date) != :growing and not planting.nutrients_adjusted?
   end
 end

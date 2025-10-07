@@ -70,4 +70,20 @@ defmodule GardenEngine.Garden do
       {:error, reason} -> {:error, reason}
     end
   end
+
+  @doc """
+  Advances all plots and plants in the garden to a new date. All plants that have reached maturity
+  will additionally trigger nutrient depletions or growths in the associated soil segements
+  within each plot.
+  """
+
+  @spec advance(garden :: t(), date :: Date.t()) :: {:ok, t()} | {:error, String.t()}
+  def advance(%__MODULE__{} = garden, %Date{} = date) do
+    case Date.diff(date, garden.current_date) do
+      # TODO: Implement plot advancement logic
+      days when days > 0 -> {:ok, garden}
+      days when days == 0 -> {:ok, garden}
+      _ -> {:error, "Can't advance to a date in the past"}
+    end
+  end
 end

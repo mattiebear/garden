@@ -55,6 +55,34 @@ defmodule GardenEngine.PlantingTest do
     end
   end
 
+  describe "nutrient_adjustment_required?/2" do
+    test "returns true if the planting is not growing and nutrients have not been applied", %{
+      plant: plant,
+      area: area
+    } do
+      planting = Planting.new(plant, area, planted_on: Date.utc_today())
+      date = Date.utc_today() |> Date.add(plant.days_to_maturity)
+
+      assert Planting.nutrient_adjustment_required?(planting, date)
+    end
+
+    test "returns false if the planting is growing", %{plant: plant, area: area} do
+      planting = Planting.new(plant, area, planted_on: Date.utc_today())
+      date = Date.utc_today()
+
+      refute Planting.nutrient_adjustment_required?(planting, date)
+    end
+
+    test "returns false if nutrients have been applied", %{plant: plant, area: area} do
+      planting = Planting.new(plant, area, planted_on: Date.utc_today())
+      date = Date.utc_today() |> Date.add(plant.days_to_maturity)
+
+      planting = %{planting | nutrients_adjusted?: true}
+
+      refute Planting.nutrient_adjustment_required?(planting, date)
+    end
+  end
+
   def plant_and_area(context) do
     plant = Plant.new("tomato", days_to_maturity: 60, days_productive: 30)
     area = Area.new(3, 3)

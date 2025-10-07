@@ -47,7 +47,7 @@ defmodule GardenEngine.Plot do
           id :: String.t(),
           plant :: GardenEngine.Plant.t(),
           area :: GardenEngine.Area.t()
-        ) :: {:ok, GardenEngine.Plot.t()} | {:error, String.t()}
+        ) :: {:ok, t()} | {:error, String.t()}
   def add_planting(%__MODULE__{} = plot, id, %Plant{} = plant, %Area{} = area)
       when is_binary(id) do
     cond do
