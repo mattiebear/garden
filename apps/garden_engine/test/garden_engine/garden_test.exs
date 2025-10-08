@@ -1,7 +1,7 @@
 defmodule GardenEngine.GardenTest do
   use ExUnit.Case, async: true
 
-  alias GardenEngine.{Area, Garden, Plant, Plot}
+  alias GardenEngine.{Area, Garden, Plant, Plot, SoilSegment}
 
   describe "new/1" do
     test "creates a new garden" do
@@ -60,12 +60,23 @@ defmodule GardenEngine.GardenTest do
   end
 
   describe "advance/2" do
-    test "does not advance to a date in the past" do
-      date = ~D[2023-01-01]
-      garden = Garden.new(current_date: date)
+    setup [:garden_with_plot, :plant]
 
+    test "does not advance to a date in the past", %{garden: garden} do
       assert {:error, "Can't advance to a date in the past"} =
-               Garden.advance(garden, ~D[2022-12-31])
+               Garden.advance(garden, Date.add(Date.utc_today(), -3))
+    end
+
+    test "advances the date on all plots", %{garden: garden, plant: plant} do
+      area = Area.new(1, 1, 0, 0)
+      {:ok, garden} = Garden.add_planting(garden, "plot", "plant1", plant, area)
+
+      assert {:ok, garden} = Garden.advance(garden, Date.add(Date.utc_today(), 3))
+
+      {:ok, plot} = Garden.get_plot(garden, "plot")
+      segment = Map.get(plot.segments, {0, 0})
+
+      assert segment == %SoilSegment{n_level: 45, p_level: 50, k_level: 50}
     end
   end
 
@@ -75,12 +86,12 @@ defmodule GardenEngine.GardenTest do
 
   defp garden_with_plot(context) do
     plot = Plot.new(4, 4)
-    garden = %Garden{plots: %{"plot" => plot}}
+    garden = %Garden{plots: %{"plot" => plot}, current_date: Date.utc_today()}
 
     Map.put(context, :garden, garden)
   end
 
   defp plant(context) do
-    Map.put(context, :plant, Plant.new("Beans"))
+    Map.put(context, :plant, Plant.new("Beans", days_to_maturity: 3, n_impact: -5))
   end
 end

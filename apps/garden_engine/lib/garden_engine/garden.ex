@@ -80,10 +80,25 @@ defmodule GardenEngine.Garden do
   @spec advance(garden :: t(), date :: Date.t()) :: {:ok, t()} | {:error, String.t()}
   def advance(%__MODULE__{} = garden, %Date{} = date) do
     case Date.diff(date, garden.current_date) do
-      # TODO: Implement plot advancement logic
-      days when days > 0 -> {:ok, garden}
-      days when days == 0 -> {:ok, garden}
-      _ -> {:error, "Can't advance to a date in the past"}
+      days when days > 0 ->
+        {:ok, advance_garden_to_date(garden, date)}
+
+      days when days == 0 ->
+        {:ok, garden}
+
+      _ ->
+        {:error, "Can't advance to a date in the past"}
     end
+  end
+
+  defp advance_garden_to_date(garden, date) do
+    updated_plots =
+      garden.plots
+      |> Enum.map(fn {id, plot} ->
+        {id, Plot.advance(plot, date)}
+      end)
+      |> Enum.into(%{})
+
+    %{garden | plots: updated_plots}
   end
 end

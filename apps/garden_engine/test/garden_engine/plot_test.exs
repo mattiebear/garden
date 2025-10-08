@@ -58,7 +58,7 @@ defmodule GardenEngine.PlotTest do
       area = Area.new(1, 1, 0, 0)
       {:ok, plot} = Plot.add_planting(plot, "plant1", plant, area)
 
-      assert {:ok, plot} = Plot.advance(plot, Date.add(Date.utc_today(), 15))
+      plot = Plot.advance(plot, Date.add(Date.utc_today(), 15))
       assert Map.get(plot.plantings, "plant1").nutrients_adjusted?
     end
 
@@ -73,7 +73,7 @@ defmodule GardenEngine.PlotTest do
                k_level: 50
              }
 
-      assert {:ok, plot} = Plot.advance(plot, Date.add(Date.utc_today(), 15))
+      plot = Plot.advance(plot, Date.add(Date.utc_today(), 15))
 
       assert Map.get(plot.segments, {0, 0}) == %SoilSegment{
                n_level: 48,
@@ -107,8 +107,7 @@ defmodule GardenEngine.PlotTest do
       area = Area.new(1, 1, 0, 0)
       {:ok, plot} = Plot.add_planting(plot, "plant1", plant, area)
 
-      assert {:ok, plot} = Plot.advance(plot, Date.add(Date.utc_today(), 15))
-      assert {:ok, plot} = Plot.advance(plot, Date.add(Date.utc_today(), 15))
+      plot = Plot.advance(plot, Date.add(Date.utc_today(), 15))
 
       assert Map.get(plot.segments, {0, 0}) == %SoilSegment{
                n_level: 48,
@@ -116,7 +115,7 @@ defmodule GardenEngine.PlotTest do
                k_level: 49
              }
 
-      assert {:ok, plot} = Plot.advance(plot, Date.add(Date.utc_today(), 30))
+      assert plot = Plot.advance(plot, Date.add(Date.utc_today(), 30))
 
       assert Map.get(plot.segments, {0, 0}) == %SoilSegment{
                n_level: 48,

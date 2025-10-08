@@ -68,7 +68,7 @@ defmodule GardenEngine.Plot do
   necessary.
   """
 
-  @spec advance(plot :: t(), date :: Date.t()) :: {:ok, t()} | {:error, String.t()}
+  @spec advance(plot :: t(), date :: Date.t()) :: t()
   def advance(%__MODULE__{} = plot, %Date{} = date) do
     {updated_plantings, adjustments} =
       Enum.map_reduce(plot.plantings, [], fn {id, planting}, adjustments_acc ->
@@ -81,9 +81,7 @@ defmodule GardenEngine.Plot do
       end)
 
     updated_segments = apply_soil_adjustments(plot.segments, adjustments)
-    updated_plot = %{plot | plantings: Map.new(updated_plantings), segments: updated_segments}
-
-    {:ok, updated_plot}
+    %{plot | plantings: Map.new(updated_plantings), segments: updated_segments}
   end
 
   defp area_occupied?(plot, area) do
