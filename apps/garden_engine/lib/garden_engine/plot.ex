@@ -63,6 +63,29 @@ defmodule GardenEngine.Plot do
     end
   end
 
+  @doc """
+  Advances the plot to the provided date and applies nutrient adjustments when
+  necessary.
+  """
+
+  @spec advance(plot :: t(), date :: Date.t()) :: {:ok, t()} | {:error, String.t()}
+  def advance(%__MODULE__{} = plot, %Date{} = date) do
+    {updated_plantings, adjustments} =
+      Enum.map_reduce(plot.plantings, [], fn {id, planting}, adjustments_acc ->
+        if not Planting.nutrient_adjustment_required?(planting, date) do
+          {{id, planting}, adjustments_acc}
+        else
+          updated_planting = %{planting | nutrients_adjusted?: true}
+          {{id, updated_planting}, [planting | adjustments_acc]}
+        end
+      end)
+
+    updated_segments = apply_soil_adjustments(plot.segments, adjustments)
+    updated_plot = %{plot | plantings: Map.new(updated_plantings), segments: updated_segments}
+
+    {:ok, updated_plot}
+  end
+
   defp area_occupied?(plot, area) do
     plot.plantings
     |> Map.values()
@@ -71,5 +94,20 @@ defmodule GardenEngine.Plot do
 
   defp plot_exists?(plot, id) do
     Map.has_key?(plot.plantings, id)
+  end
+
+  defp apply_soil_adjustments(segments, plantings) do
+    Enum.reduce(plantings, segments, fn planting, acc ->
+      coords = Area.coordinates(planting.area)
+
+      Enum.reduce(coords, acc, fn {x, y}, acc ->
+        Map.update!(acc, {x, y}, fn segment ->
+          segment
+          |> SoilSegment.adjust_nitrogen(planting.plant.n_impact)
+          |> SoilSegment.adjust_phosphorus(planting.plant.p_impact)
+          |> SoilSegment.adjust_potassium(planting.plant.k_impact)
+        end)
+      end)
+    end)
   end
 end
