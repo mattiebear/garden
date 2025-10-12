@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: docker.io/postgres:16.1
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - garden_data:/var/lib/postgresql/data
+
+volumes:
+  garden_data:
