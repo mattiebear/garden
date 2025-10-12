@@ -16,6 +16,19 @@
 # General application configuration
 import Config
 
+config :garden_server, :scopes,
+  user: [
+    default: true,
+    module: GardenServer.Accounts.Scope,
+    assign_key: :current_scope,
+    access_path: [:user, :id],
+    schema_key: :user_id,
+    schema_type: :id,
+    schema_table: :users,
+    test_data_fixture: GardenServer.AccountsFixtures,
+    test_setup_helper: :register_and_log_in_user
+  ]
+
 config :garden_server,
   ecto_repos: [GardenServer.Repo],
   generators: [timestamp_type: :utc_datetime]
